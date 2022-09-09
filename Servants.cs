@@ -4,15 +4,15 @@ namespace PrincessConsole
     {
         public Servants(Hall hall)
         {
-            this.hall = hall;
+            _hall = hall;
         }
 
         public string next()
         {
-            return hall.next(nextAspirant);
+            return _hall.next(_nextAspirant++);
         }
 
-        private int nextAspirant = 0;
-        private Hall hall;
+        private int _nextAspirant = 0;
+        private Hall _hall;
     }
 }

@@ -4,32 +4,14 @@ namespace PrincessConsole
     {
         public Aspirant(string name, int quality)
         {
-            this.name = name;
-            this.quality = quality;
+            Name = name;
+            Quality = quality;
         }
 
-        public string getName()
-        {
-            return name;
-        }
+        public string Name { get; private set; }
 
-        public int getQuality()
-        {
-            return quality;
-        }
+        public int Quality { get; private set; }
 
-        public bool getIsWasted()
-        {
-            return isWasted;
-        }
-
-        public void setIsWasted(bool isWasted)
-        {
-            this.isWasted = isWasted;
-        }
-
-        private string name;
-        private int quality;
-        private bool isWasted;
+        public bool IsWasted { get; set; }
     }
 }

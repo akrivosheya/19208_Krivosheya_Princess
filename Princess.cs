@@ -4,26 +4,27 @@ namespace PrincessConsole
     {
         public Princess(Servants servants, Friend friend)
         {
-            this.servants = servants;
-            this.friend = friend;
-            wastedAspirants = new string[ASPIRANTS_COUNT];
-            wastedAspirantsCount = (int)(ASPIRANTS_COUNT / Math.E);
+            _servants = servants;
+            _friend = friend;
+            _wastedAspirants = new string[ASPIRANTS_COUNT];
+            _wastedAspirantsCount = (int)(ASPIRANTS_COUNT / Math.E);
+            Groom = NO_ASPIRANT;
         }
-        public string chooseGroom()
+
+        public void chooseGroom()
         {
             int i = 0;
-            for(; i < wastedAspirantsCount; ++i)
+            for(; i < _wastedAspirantsCount; ++i)
             {
-                wastedAspirants[i] = servants.next();
+                _wastedAspirants[i] = _servants.next();
             }
-            string groom = null;
             for(; i < MAX_WASTED_ASPIRANT_COUNT; ++i)
             {
-                string aspirant = servants.next();
+                string aspirant = _servants.next();
                 bool badAspirant = false;
                 for(int j = 0; j < i; ++j)
                 {
-                    if(!friend.compare(aspirant, wastedAspirants[j]))
+                    if(!_friend.compare(aspirant, _wastedAspirants[j]))
                     {
                         badAspirant = true;
                         break;
@@ -31,19 +32,25 @@ namespace PrincessConsole
                 }
                 if(!badAspirant)
                 {
-                    groom = aspirant;
+                    Groom = aspirant;
                     break;
                 }
+                else
+                {
+                    _wastedAspirants[i] = aspirant;
+                }
             }
-            return groom;
         }
 
-        private int ASPIRANTS_COUNT = 100;
-        private int MAX_WASTED_ASPIRANT_COUNT = 50;
+        public string Groom { get; private set; }
 
-        private int wastedAspirantsCount;
-        private string[] wastedAspirants;
-        private Servants servants;
-        private Friend friend;
+        private const int ASPIRANTS_COUNT = 100;
+        private const int MAX_WASTED_ASPIRANT_COUNT = 50;
+        private const string NO_ASPIRANT = "";
+
+        private int _wastedAspirantsCount;
+        private string[] _wastedAspirants;
+        private Servants _servants;
+        private Friend _friend;
     }
 }

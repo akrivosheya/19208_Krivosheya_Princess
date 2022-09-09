@@ -8,7 +8,8 @@
             Servants servants = new Servants(hall);
             Friend friend = new Friend(hall);
             Princess princess = new Princess(servants, friend);
-            Console.WriteLine(princess.chooseGroom());
+            princess.chooseGroom();
+            Console.WriteLine("Groom is :" + princess.Groom);
         }
     }
 }

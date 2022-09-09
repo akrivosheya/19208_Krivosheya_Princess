@@ -17,7 +17,7 @@ namespace PrincessConsole
                 aspirants.Add(randomName, new Aspirant(randomName, i));
                 queue[i] = randomName;
             }
-            queue = shuffleArray(queue);
+            shuffleArray(queue);
         }
 
         public string next(int index)
@@ -29,9 +29,9 @@ namespace PrincessConsole
             return queue[index];
         }
 
-        public Aspirant getAspirant(string name)
+        public object getAspirant(string name)
         {
-            return (Aspirant)aspirants[name];
+            return aspirants[name] ?? new Aspirant("badAspirant", -1);// нормально передать
         }
 
         private string getRandomName()
@@ -47,22 +47,20 @@ namespace PrincessConsole
             return name.ToString();
         }
 
-        private string[] shuffleArray(string[] names)
+        private void shuffleArray(string[] array)
         {
-            if(null == names)
+            if(array is null)
             {
-                return null;
+                return;
             }
             Random random = new Random();
-            string[] newArray = names.Clone() as string[];
-            for(int i = 0; i < newArray.Length; ++i)
+            for(int i = 0; i < array.Length; ++i)
             {
-                string tmp = newArray[i];
-                int r = random.Next(i, newArray.Length);
-                newArray[i] = newArray[r];
-                newArray[r] = tmp;
+                string tmp = array[i];
+                int r = random.Next(i, array.Length);
+                array[i] = array[r];
+                array[r] = tmp;
             }
-            return newArray;
         }
 
         private int ASPIRANTS_COUNT = 100;
