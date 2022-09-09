@@ -5,36 +5,49 @@ namespace PrincessConsole
 {
     class Hall
     {
+        public readonly int ASPIRANTS_COUNT = 100;
+        private int MAX_NAME_LENGTH = 10;
+        private int MIN_NAME_LENGTH = 1;
+
+        private Hashtable aspirants = new Hashtable();
+        private string[] queue;
+        
         public Hall()
         {
             queue = new string[ASPIRANTS_COUNT];
             for(int i = 0; i < ASPIRANTS_COUNT; ++i)
             {
-                string randomName = getRandomName();
+                string randomName = GetRandomName();
                 while(aspirants.ContainsKey(randomName)){
-                    randomName = getRandomName();
+                    randomName = GetRandomName();
                 }
-                aspirants.Add(randomName, new Aspirant(randomName, i));
+                aspirants.Add(randomName, new Aspirant(randomName, i + 1));
                 queue[i] = randomName;
             }
-            shuffleArray(queue);
+            ShuffleArray(queue);
         }
 
-        public string next(int index)
+        public string this[int index]
         {
-            if(index > ASPIRANTS_COUNT)
+            get
             {
-                return "";
+                if(index > ASPIRANTS_COUNT)
+                {
+                    return "";
+                }
+                return queue[index];
             }
-            return queue[index];
         }
 
-        public object getAspirant(string name)
+        public Aspirant this[string name]
         {
-            return aspirants[name] ?? new Aspirant("badAspirant", -1);// нормально передать
+            get
+            {
+                return aspirants[name] as Aspirant ?? new Aspirant("", -1);
+            }
         }
 
-        private string getRandomName()
+        private string GetRandomName()
         {
             Random random = new Random();
             int nameLength = random.Next(MIN_NAME_LENGTH, MAX_NAME_LENGTH);
@@ -47,7 +60,7 @@ namespace PrincessConsole
             return name.ToString();
         }
 
-        private void shuffleArray(string[] array)
+        private void ShuffleArray(string[] array)
         {
             if(array is null)
             {
@@ -62,12 +75,5 @@ namespace PrincessConsole
                 array[r] = tmp;
             }
         }
-
-        private int ASPIRANTS_COUNT = 100;
-        private int MAX_NAME_LENGTH = 10;
-        private int MIN_NAME_LENGTH = 1;
-
-        private Hashtable aspirants = new Hashtable();
-        private string[] queue;
     }
 }

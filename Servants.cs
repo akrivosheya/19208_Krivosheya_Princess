@@ -2,17 +2,17 @@ namespace PrincessConsole
 {
     class Servants
     {
+        private int _nextAspirant = 0;
+        private Hall _hall;
+
         public Servants(Hall hall)
         {
             _hall = hall;
         }
 
-        public string next()
+        public string Next()
         {
-            return _hall.next(_nextAspirant++);
+            return _hall[_nextAspirant++];
         }
-
-        private int _nextAspirant = 0;
-        private Hall _hall;
     }
 }
