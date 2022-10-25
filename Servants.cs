@@ -10,9 +10,10 @@ namespace PrincessConsole
             _hall = hall;
         }
 
-        public string Next()
+        public string? Next()
         {
-            return _hall[_nextAspirant++];
+            string aspirantName = _hall[_nextAspirant++];
+            return (aspirantName.Equals("")) ? aspirantName : null;
         }
     }
 }

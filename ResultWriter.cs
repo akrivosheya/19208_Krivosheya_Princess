@@ -4,29 +4,35 @@ namespace PrincessConsole
 {
     class ResultWriter
     {
-        private const string FILE_NAME = "princessHappiness.txt";
-        private const int MIN_QUALITY = 50;
-        private const int LONELINESS_HAPPINESS_POINTS = 10;
-        private const int UNHAPPINESS_POINTS = 0;
+        private const string FileName = "princessHappiness.txt";
+        private const string NoGroom = "";
+        private const string UnknownAspirant = "Unknown Aspirant";
+        private const int MinQuality = 50;
+        private const int LonelinessHappinessPoints = 10;
+        private const int UnhappinessPoints = 0;
 
         public void WriteResult(Hall hall, string groom)
         {
-            using(StreamWriter stream = File.CreateText(FILE_NAME))
+            using(StreamWriter stream = File.CreateText(FileName))
             {
-                for(int i = 0; i < hall.ASPIRANTS_COUNT; ++i)
+                for(int i = 0; i < hall.AspirantsCount; ++i)
                 {
-                    stream.WriteLine(hall[i]);
+                    string aspirantName = hall[i];
+                    stream.WriteLine($"Aspirant: {aspirantName}, Quality: {hall[aspirantName]?.Quality}");
                 }
-                if(groom == "")
+                if(groom == NoGroom)
                 {
-                    stream.WriteLine(LONELINESS_HAPPINESS_POINTS);
+                    stream.WriteLine(LonelinessHappinessPoints);
                 }
                 else
                 {
-                    int groomQuality = ((Aspirant)hall[groom]).Quality;
-                    if(groomQuality <= MIN_QUALITY)
+                    int? groomQuality = hall[groom]?.Quality;
+                    if(groomQuality == null){
+                        stream.WriteLine(UnknownAspirant);
+                    }
+                    else if(groomQuality <= MinQuality)
                     {
-                        stream.WriteLine(UNHAPPINESS_POINTS);
+                        stream.WriteLine(UnhappinessPoints);
                     }
                     else
                     {
