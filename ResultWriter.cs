@@ -15,9 +15,8 @@ namespace PrincessConsole
         {
             using(StreamWriter stream = File.CreateText(FileName))
             {
-                for(int i = 0; i < hall.AspirantsCount; ++i)
+                foreach(string aspirantName in hall)
                 {
-                    string aspirantName = hall[i];
                     stream.WriteLine($"Aspirant: {aspirantName}, Quality: {hall[aspirantName]?.Quality}");
                 }
                 if(groom == NoGroom)
@@ -32,11 +31,11 @@ namespace PrincessConsole
                     }
                     else if(groomQuality <= MinQuality)
                     {
-                        stream.WriteLine(UnhappinessPoints);
+                        stream.WriteLine(groom + " with " + groomQuality + " => " + UnhappinessPoints);
                     }
                     else
                     {
-                        stream.WriteLine(groomQuality);
+                        stream.WriteLine(groom + " with " + groomQuality);
                     }
                 }
             }

@@ -1,57 +1,89 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
 namespace PrincessConsole
 {
-    class Princess
+    class Princess : IHostedService
     {
-        public string Groom { get; private set; }
 
         private const int AspirantsCount = 100;
         private const int MaxWastedAspirantCount = 50;
-        private const string NoAspirant = "";
+        private const int WastedAspirantsCount = (int)(AspirantsCount / Math.E);
+        private const string NoGroom = "";
+        private const string MessageStoppedPrincess = "Princess was stoped";
 
-        private int _wastedAspirantsCount = (int)(AspirantsCount / Math.E);
+        private IServiceScopeFactory _scopeFactory;
+        private IServiceProvider _provider;
+        private readonly ILogger<Princess> _logger;
         private string[] _wastedAspirants = new string[AspirantsCount];
-        private Servants _servants;
-        private Friend _friend;
+        private string _groom;
+        private bool _running = true;
 
-        public Princess(Servants servants, Friend friend)
+        public Princess(IServiceProvider provider, IServiceScopeFactory scopeFactory)
         {
-            _servants = servants;
-            _friend = friend;
-            Groom = NoAspirant;
+            _provider = provider;
+            _scopeFactory = scopeFactory;
+            _logger = provider.GetService<ILogger<Princess>>()!;
+            _groom = NoGroom;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            Task.Run(ChooseGroom);
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _running = false;
+            return Task.CompletedTask;
         }
 
         public void ChooseGroom()
         {
-            int i = 0;
-            for(; i < _wastedAspirantsCount; ++i)
+            using(IServiceScope scope = _scopeFactory.CreateScope())
             {
-                _wastedAspirants[i] = _servants.Next()!;
-            }
-            for(; i < MaxWastedAspirantCount; ++i)
-            {
-                string? aspirant = _servants.Next();
-                if(aspirant == null)
+                int i = 0;
+                var friend = scope.ServiceProvider.GetService<Friend>()!;
+                var hall = scope.ServiceProvider.GetService<Hall>()!;
+                foreach(string aspirantName in hall)
                 {
-                    break;
-                }
-                bool badAspirant = false;
-                for(int j = 0; j < i; ++j)
-                {
-                    if(!_friend.Compare(aspirant!, _wastedAspirants[j]))
+                    if(!_running)
                     {
-                        badAspirant = true;
-                        break;
+                        _logger.LogInformation(MessageStoppedPrincess);
+                        return;
                     }
+                    if(i < WastedAspirantsCount)
+                    {
+                        _wastedAspirants[i] = aspirantName;
+                    }
+                    else
+                    {
+                        bool badAspirant = false;
+                        for(int j = 0; j < i; ++j)
+                        {
+                            if(!friend.Compare(aspirantName, _wastedAspirants[j]))
+                            {
+                                badAspirant = true;
+                                break;
+                            }
+                        }
+                        if(!badAspirant)
+                        {
+                            _groom = aspirantName;
+                            break;
+                        }
+                        else
+                        {
+                            _wastedAspirants[i] = aspirantName;
+                        }
+                    }
+                    ++i;
                 }
-                if(!badAspirant)
-                {
-                    Groom = aspirant;
-                    break;
-                }
-                else
-                {
-                    _wastedAspirants[i] = aspirant;
-                }
+                _logger.LogInformation("Groom is : " + ((_groom.Equals(NoGroom)) ? "NO GROOM" : _groom));
+                var writer = _provider.GetService<ResultWriter>()!;
+                writer.WriteResult(hall, _groom);
             }
         }
     }
