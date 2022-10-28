@@ -15,16 +15,18 @@ namespace PrincessConsole
 
         private IServiceScopeFactory _scopeFactory;
         private IServiceProvider _provider;
+        private IHostApplicationLifetime _lifetime;
         private readonly ILogger<Princess> _logger;
         private string[] _wastedAspirants = new string[AspirantsCount];
         private string _groom;
         private bool _running = true;
 
-        public Princess(IServiceProvider provider, IServiceScopeFactory scopeFactory)
+        public Princess(IServiceProvider provider, IServiceScopeFactory scopeFactory, IHostApplicationLifetime lifetime)
         {
             _provider = provider;
             _scopeFactory = scopeFactory;
             _logger = provider.GetService<ILogger<Princess>>()!;
+            _lifetime = lifetime;
             _groom = NoGroom;
         }
 
@@ -52,7 +54,7 @@ namespace PrincessConsole
                     if(!_running)
                     {
                         _logger.LogInformation(MessageStoppedPrincess);
-                        return;
+                        break;
                     }
                     if(i < WastedAspirantsCount)
                     {
@@ -81,9 +83,13 @@ namespace PrincessConsole
                     }
                     ++i;
                 }
+                if(!_running){
+                    _lifetime.StopApplication();
+                }
                 _logger.LogInformation("Groom is : " + ((_groom.Equals(NoGroom)) ? "NO GROOM" : _groom));
                 var writer = _provider.GetService<ResultWriter>()!;
                 writer.WriteResult(hall, _groom);
+                _lifetime.StopApplication();
             }
         }
     }
