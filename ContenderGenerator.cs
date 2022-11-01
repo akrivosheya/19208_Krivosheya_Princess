@@ -2,7 +2,7 @@ using System.Text;
 
 namespace PrincessConsole
 {
-    class ContenderGenerator
+    public class ContenderGenerator
     {
         private const int MaxNameLength = 10;
         private const int MinNameLength = 1;
@@ -15,7 +15,7 @@ namespace PrincessConsole
                 while(aspirants.ContainsKey(randomName)){
                     randomName = GetRandomName();
                 }
-                aspirants.Add(randomName, new Aspirant { Name=randomName, Quality=(i + 1) });
+                aspirants.Add(randomName, new Aspirant { Name=randomName, Quality=(i + 1), IsWasted=false });
                 queue[i] = randomName;
             }
             ShuffleArray(queue);

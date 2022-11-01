@@ -1,10 +1,10 @@
 namespace PrincessConsole
 {
-    class Aspirant
+    public class Aspirant
     {
         public string Name { get; init; } = "";
         public int Quality { get; init; }
-        public bool IsWasted { get; set; }
+        public bool IsWasted { get; set; } = false;
 
         public static bool operator <(Aspirant aspirant1, Aspirant aspirant2)
         {

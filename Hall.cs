@@ -1,9 +1,8 @@
 namespace PrincessConsole
 {
-    class Hall
+    public class Hall
     {
         public readonly int AspirantsCount = 100;
-        private const string NoAspirant = "";
 
         private Dictionary<string, Aspirant> _aspirants = new Dictionary<string, Aspirant>();
         private string[] _queue;
@@ -28,17 +27,21 @@ namespace PrincessConsole
             {
                 if(index > AspirantsCount)
                 {
-                    return NoAspirant;
+                    throw new NoAspirantException($"There is no aspirant with index {index}");
                 }
                 return _queue[index];
             }
         }
 
-        public Aspirant? this[string name]
+        public Aspirant this[string name]
         {
             get
             {
-                return _aspirants[name] as Aspirant;
+                if(!_aspirants.ContainsKey(name))
+                {
+                    throw new NoAspirantException($"There is no aspirant with name {name}");
+                }
+                return (_aspirants[name] as Aspirant)!;
             }
         }
     }

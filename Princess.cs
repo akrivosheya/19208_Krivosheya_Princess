@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace PrincessConsole
 {
-    class Princess : IHostedService
+    public class Princess : IHostedService
     {
 
         private const int AspirantsCount = 100;
@@ -59,6 +59,7 @@ namespace PrincessConsole
                     if(i < WastedAspirantsCount)
                     {
                         _wastedAspirants[i] = aspirantName;
+                        hall[aspirantName]!.IsWasted = true;
                     }
                     else
                     {
@@ -79,6 +80,7 @@ namespace PrincessConsole
                         else
                         {
                             _wastedAspirants[i] = aspirantName;
+                            hall[aspirantName]!.IsWasted = true;
                         }
                     }
                     ++i;

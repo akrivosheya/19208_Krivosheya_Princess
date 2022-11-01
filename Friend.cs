@@ -1,6 +1,6 @@
 namespace PrincessConsole
 {
-    class Friend
+    public class Friend
     {
         private Hall _hall;
 
@@ -11,15 +11,11 @@ namespace PrincessConsole
 
         public bool Compare(string aspirantName1, string aspirantName2)
         {
-            Aspirant? aspirant1 = _hall[aspirantName1] as Aspirant;
-            Aspirant? aspirant2 = _hall[aspirantName2] as Aspirant;
-            if(aspirant2 == null)
+            Aspirant aspirant1 = _hall[aspirantName1];
+            Aspirant aspirant2 = _hall[aspirantName2];
+            if(!aspirant1.IsWasted && !aspirant2.IsWasted)
             {
-                return true;
-            }
-            if(aspirant1 == null)
-            {
-                return false;
+                throw new StrangerAspirantException($"Friend can't compare aspirants: princess didn't meet {aspirantName1} and {aspirantName2}");
             }
             return aspirant1 > aspirant2;
         }

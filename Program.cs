@@ -17,7 +17,7 @@ namespace PrincessConsole
                     services.AddTransient<ResultWriter>();
                 })
                 .Build();
-            host.Run();
+            host.StartAsync();
         }
     }
 }

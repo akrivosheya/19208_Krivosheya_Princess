@@ -1,8 +1,6 @@
-using System.IO;
-
 namespace PrincessConsole
 {
-    class ResultWriter
+    public class ResultWriter
     {
         private const string FileName = "princessHappiness.txt";
         private const string NoGroom = "";
