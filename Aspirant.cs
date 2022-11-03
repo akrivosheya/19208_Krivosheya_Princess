@@ -3,7 +3,7 @@ namespace PrincessConsole
     public class Aspirant
     {
         public string Name { get; init; } = "";
-        public int Quality { get; init; }
+        public int Quality { get; init; } = 0;
         public bool IsWasted { get; set; } = false;
 
         public static bool operator <(Aspirant aspirant1, Aspirant aspirant2)
