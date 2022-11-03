@@ -2,7 +2,7 @@ using System.Text;
 
 namespace PrincessConsole
 {
-    public class ContenderGenerator
+    public class RandomContenderGenerator : IContenderGenerator
     {
         private const int MaxNameLength = 10;
         private const int MinNameLength = 1;
