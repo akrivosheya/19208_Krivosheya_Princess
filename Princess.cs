@@ -49,8 +49,9 @@ namespace PrincessConsole
                 int i = 0;
                 var friend = scope.ServiceProvider.GetService<Friend>()!;
                 var hall = scope.ServiceProvider.GetService<Hall>()!;
-                foreach(string aspirantName in hall)
+                while(hall.HasNext)
                 {
+                    string aspirantName = hall.Next();
                     if(!_running)
                     {
                         _logger.LogInformation(MessageStoppedPrincess);
@@ -85,7 +86,8 @@ namespace PrincessConsole
                     }
                     ++i;
                 }
-                if(!_running){
+                if(!_running)
+                {
                     _lifetime.StopApplication();
                 }
                 _logger.LogInformation("Groom is : " + ((_groom.Equals(NoGroom)) ? "NO GROOM" : _groom));

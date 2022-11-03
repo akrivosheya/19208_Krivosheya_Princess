@@ -3,14 +3,27 @@ namespace PrincessConsole
     public class Hall
     {
         public readonly int AspirantsCount = 100;
+        public bool HasNext
+        {
+            get
+            {
+                return _currentAspirant < _queue.Length;
+            }
+        }
 
         private Dictionary<string, Aspirant> _aspirants = new Dictionary<string, Aspirant>();
         private string[] _queue;
+        private int _currentAspirant = 0;
         
-        public Hall(ContenderGenerator generator)
+        public Hall(IContenderGenerator generator)
         {
             _queue = new string[AspirantsCount];
             generator.GenerateContenders(_queue, _aspirants);
+        }
+
+        public string Next()
+        {
+            return this[_currentAspirant++];
         }
 
         public IEnumerator<string> GetEnumerator()
@@ -25,7 +38,7 @@ namespace PrincessConsole
         {
             get
             {
-                if(index > AspirantsCount)
+                if(index >= AspirantsCount || index < 0)
                 {
                     throw new NoAspirantException($"There is no aspirant with index {index}");
                 }
@@ -39,7 +52,7 @@ namespace PrincessConsole
             {
                 if(!_aspirants.ContainsKey(name))
                 {
-                    throw new NoAspirantException($"There is no aspirant with name {name}");
+                    throw new StrangerAspirantException($"There is no aspirant with name {name}");
                 }
                 return (_aspirants[name] as Aspirant)!;
             }
