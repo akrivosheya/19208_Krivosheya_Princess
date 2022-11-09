@@ -91,7 +91,7 @@ namespace PrincessConsole
                     _lifetime.StopApplication();
                 }
                 _logger.LogInformation("Groom is : " + ((_groom.Equals(NoGroom)) ? "NO GROOM" : _groom));
-                var writer = _provider.GetService<ResultWriter>()!;
+                var writer = _provider.GetService<IResultWriter>()!;
                 writer.WriteResult(hall, _groom);
                 _lifetime.StopApplication();
             }
