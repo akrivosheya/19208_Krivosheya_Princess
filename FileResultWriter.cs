@@ -1,6 +1,6 @@
 namespace PrincessConsole
 {
-    public class ResultWriter
+    public class FileResultWriter : IResultWriter
     {
         private const string FileName = "princessHappiness.txt";
         private const string NoGroom = "";
