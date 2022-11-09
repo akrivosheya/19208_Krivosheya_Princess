@@ -13,11 +13,12 @@ namespace PrincessConsole
                     services.AddHostedService<Princess>();
                     services.AddScoped<Hall>();
                     services.AddScoped<Friend>();
-                    services.AddScoped<IContenderGenerator, RandomContenderGenerator>();
-                    services.AddTransient<ResultWriter>();
+                    services.AddTransient<IContenderGenerator, RandomContenderGenerator>();
+                    services.AddTransient<IResultWriter, FileResultWriter>();
                 })
                 .Build();
             host.StartAsync();
+            host.WaitForShutdown();
         }
     }
 }
