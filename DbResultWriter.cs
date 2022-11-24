@@ -1,42 +1,49 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace PrincessConsole
 {
-    public class FileResultWriter : IResultWriter
+    public class DbResultWriter : IResultWriter
     {
-        private const string FileName = "princessHappiness.txt";
         private const string NoGroom = "";
         private const string UnknownAspirant = "Unknown Aspirant";
         private const int MinQuality = 50;
         private const int LonelinessHappinessPoints = 10;
         private const int UnhappinessPoints = 0;
+        private IDbContextFactory<AspirantsContext> _contextFactory;
+        private int _attemptNumber;
+
+        public DbResultWriter(IDbContextFactory<AspirantsContext> contextFactory, AttemptNumber attemptNumber)
+        {
+            _contextFactory = contextFactory;
+            _attemptNumber = attemptNumber.Number;
+        }
 
         public void WriteResult(Hall hall, string groom)
         {
-            using(StreamWriter stream = File.CreateText(FileName))
+            using(var context = _contextFactory.CreateDbContext())
             {
-                foreach(string aspirantName in hall)
-                {
-                    stream.WriteLine($"Aspirant: {aspirantName}, Quality: {hall[aspirantName]?.Quality}");
-                }
+                context.Database.EnsureCreated();
+                var attempt = context.Attempts.Find(_attemptNumber)!;
                 if(groom == NoGroom)
                 {
-                    stream.WriteLine(LonelinessHappinessPoints);
+                    attempt.Happiness = LonelinessHappinessPoints;
                 }
                 else
                 {
                     int? groomQuality = hall[groom]?.Quality;
                     if(groomQuality == null)
                     {
-                        stream.WriteLine(UnknownAspirant);
                     }
                     else if(groomQuality <= MinQuality)
                     {
-                        stream.WriteLine(groom + " with " + groomQuality + " => " + UnhappinessPoints);
+                        attempt.Happiness =  UnhappinessPoints;
                     }
                     else
                     {
-                        stream.WriteLine(groom + " with " + groomQuality);
+                        attempt.Happiness =  groomQuality;
                     }
                 }
+                context.SaveChanges();
             }
         }
     }
