@@ -8,11 +8,8 @@ namespace PrincessConsole
         public DbSet<Attempt> Attempts { get; set; }
 
         private int MaxAspirantNameLength = 50;
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var connectionString = @"Server=localhost;Database=TestAppDB;User Id=postgres;Password=587963klop";
-            optionsBuilder.UseNpgsql(connectionString);
-        }
+
+        public AspirantsContext(DbContextOptions<AspirantsContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

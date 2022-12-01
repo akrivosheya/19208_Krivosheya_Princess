@@ -19,7 +19,9 @@ namespace PrincessConsole
             {
                 context.Database.EnsureCreated();
                 var attempt = context.Attempts.Find(_attemptNumber);
-                var order = attempt!.Aspirants!;
+                var order = new List<int>();
+                var parseMaster = new DataBaseParseMaster();
+                parseMaster.ParseStringToList(attempt!.Aspirants!, order);
 
                 for(int i = 0; i < queue.Length; ++i)
                 {
