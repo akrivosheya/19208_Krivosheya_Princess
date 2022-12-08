@@ -18,7 +18,7 @@ namespace PrincessConsole
             _attemptNumber = attemptNumber.Number;
         }
 
-        public void WriteResult(Hall hall, string groom)
+        public void WriteResult(IHall hall, string groom)
         {
             using(var context = _contextFactory.CreateDbContext())
             {

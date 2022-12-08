@@ -1,6 +1,6 @@
 namespace PrincessConsole
 {
-    public class Friend
+    public class Friend : IFriend
     {
         private Hall _hall;
 

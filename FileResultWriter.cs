@@ -9,7 +9,7 @@ namespace PrincessConsole
         private const int LonelinessHappinessPoints = 10;
         private const int UnhappinessPoints = 0;
 
-        public void WriteResult(Hall hall, string groom)
+        public void WriteResult(IHall hall, string groom)
         {
             using(StreamWriter stream = File.CreateText(FileName))
             {

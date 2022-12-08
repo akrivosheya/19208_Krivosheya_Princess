@@ -1,8 +1,8 @@
 namespace PrincessConsole
 {
-    public class Hall
+    public class Hall : IHall
     {
-        public readonly int AspirantsCount = 100;
+        public int AspirantsCount { get; } = 100;
         public bool HasNext
         {
             get

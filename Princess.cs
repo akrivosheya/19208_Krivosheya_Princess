@@ -1,7 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
 namespace PrincessConsole
 {
     public class Princess : IHostedService
@@ -47,8 +43,8 @@ namespace PrincessConsole
             using(IServiceScope scope = _scopeFactory.CreateScope())
             {
                 int i = 0;
-                var friend = scope.ServiceProvider.GetService<Friend>()!;
-                var hall = scope.ServiceProvider.GetService<Hall>()!;
+                var friend = scope.ServiceProvider.GetService<IFriend>()!;
+                var hall = scope.ServiceProvider.GetService<IHall>()!;
                 while(hall.HasNext)
                 {
                     string aspirantName = hall.Next();

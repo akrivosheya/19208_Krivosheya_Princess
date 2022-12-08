@@ -4,6 +4,7 @@ namespace PrincessConsole
 {
     public class AttemptContenderGenerator : IContenderGenerator
     {
+        public int Attempt { get => _attemptNumber; set => _attemptNumber = value; }
         private IDbContextFactory<AspirantsContext> _contextFactory;
         private int _attemptNumber;
 
@@ -23,6 +24,7 @@ namespace PrincessConsole
                 var parseMaster = new DataBaseParseMaster();
                 parseMaster.ParseStringToList(attempt!.Aspirants!, order);
 
+                aspirants.Clear();
                 for(int i = 0; i < queue.Length; ++i)
                 {
                     var aspirant = context.Aspirants.Find(order[i])!;

@@ -12,8 +12,8 @@ namespace PrincessConsole
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Princess>();
-                    services.AddScoped<Hall>();
-                    services.AddScoped<Friend>();
+                    services.AddScoped<IHall, Hall>();
+                    services.AddScoped<IFriend, Friend>();
                     services.AddTransient<IContenderGenerator, AttemptContenderGenerator>();
                     services.AddTransient<IResultWriter, DbResultWriter>();
                     services.AddDbContextFactory<AspirantsContext>(optionsBuilding);
