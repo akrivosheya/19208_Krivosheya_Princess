@@ -13,6 +13,21 @@ namespace PrincessConsole
 
         static void Main(string[] args)
         {
+            IHost host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddTransient<IContenderGenerator, AttemptContenderGenerator>();
+                    services.AddDbContextFactory<AspirantsContext>(optionsBuilder => optionsBuilder.UseNpgsql(_connectionString));
+                    services.AddSingleton<AttemptNumber>(new AttemptNumber(){ Number=1 } );
+                    services.AddSingleton<ControllerData>(new ControllerData());
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                })
+                .Build();
+            host.StartAsync();
+            Thread.Sleep(1000);
             if(args.Length > MinArguments)
             {
                 if(Int32.TryParse(args[0], out int attemptNumber) && attemptNumber > 0 && attemptNumber <= AttemptsCount)
@@ -62,6 +77,7 @@ namespace PrincessConsole
                 optionsBuilder.UseNpgsql(_connectionString);
                 attemptsRunner.runAllAttempts(args, optionsBuilder, optionsBuilder => optionsBuilder.UseNpgsql(_connectionString));
             }
+            host.WaitForShutdown();
         }
     }
 }

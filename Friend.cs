@@ -2,9 +2,9 @@ namespace PrincessConsole
 {
     public class Friend : IFriend
     {
-        private Hall _hall;
+        private IHall _hall;
 
-        public Friend(Hall hall)
+        public Friend(IHall hall)
         {
             _hall = hall;
         }

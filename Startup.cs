@@ -20,7 +20,7 @@ namespace PrincessConsole
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             //app.UseAuthentication();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

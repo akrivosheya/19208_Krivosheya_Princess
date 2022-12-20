@@ -6,6 +6,7 @@ namespace PrincessConsole
         public bool HasNext { get; }
 
         public string Next();
+        public void Select();
         public IEnumerator<string> GetEnumerator();
         public string this[int index] { get; }
         public Aspirant this[string name] { get; }

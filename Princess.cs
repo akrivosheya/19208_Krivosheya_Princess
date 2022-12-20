@@ -72,6 +72,7 @@ namespace PrincessConsole
                         if(!badAspirant)
                         {
                             _groom = aspirantName;
+                            hall.Select();
                             break;
                         }
                         else

@@ -9,29 +9,52 @@ namespace PrincessConsole
         {
             get
             {
-                return _currentAspirant < _queue.Length;
+                return _currentAspirantIndex < AspirantsCount;
             }
         }
-        private readonly string BaseAddress = "https://localhost:5000/aspirants";
+        private readonly string BaseAddress = "http://localhost:5000";
+        private readonly string NoGroom = "";
+        private readonly int FirstAspirant = 0;
+        private readonly int DefaultQuality = 0;
         private HttpClient _client = new HttpClient();
+        private HashSet<string> _wastedAspirants = new HashSet<string>();
+        private int _groomQuality;
+        private string _groomName;
         private int _currentAttempt;
+        private int _currentAspirantIndex;
+        private string _currentAspirantName = "";
         
         public HttpClientHall(AttemptNumber attempt)
         {
             _currentAttempt = attempt.Number;
+            _currentAspirantIndex = FirstAspirant;
+            _groomQuality = DefaultQuality;
+            _groomName = NoGroom;
             _client.BaseAddress = new Uri(BaseAddress);
         }
 
         public string Next()
         {
-            return AsyncNext();
+            ++_currentAspirantIndex;
+            var name = AsyncNext().Result;
+            _currentAspirantName = name;
+            _wastedAspirants.Add(name);
+            return name;
+        }
+
+        public void Select()
+        {
+            _groomName = _currentAspirantName;
+            _groomQuality = AsyncSelect().Result;
         }
 
         public IEnumerator<string> GetEnumerator()
         {
-            foreach(string aspirantName in _queue)
+            AsyncReset().Wait();
+            _currentAspirantIndex = FirstAspirant;
+            for(int i = 0; i < AspirantsCount; ++i)
             {
-                yield return aspirantName;
+                yield return AsyncNext().Result;
             }
         }
 
@@ -39,11 +62,7 @@ namespace PrincessConsole
         {
             get
             {
-                if(index >= AspirantsCount || index < 0)
-                {
-                    throw new NoAspirantException($"There is no aspirant with index {index}");
-                }
-                return _queue[index];
+                return "";
             }
         }
 
@@ -51,18 +70,16 @@ namespace PrincessConsole
         {
             get
             {
-                if(!_aspirants.ContainsKey(name))
-                {
-                    throw new StrangerAspirantException($"There is no aspirant with name {name}");
-                }
-                return (_aspirants[name] as Aspirant)!;
+                return new Aspirant(){ Name=name, 
+                    Quality=(name.Equals(_groomName) ? _groomQuality : DefaultQuality), 
+                    IsWasted=_wastedAspirants.Contains(name) };
             }
         }
 
         private async Task<string> AsyncNext()
         {
             var postContent = new StringContent("");
-            var response = await _client.PostAsync($"hall/{_currentAttempt}/next", postContent);
+            var response = await _client.PostAsync($"aspirants/hall/{_currentAttempt}/next?session=1", postContent);
             var stringBody = await response.Content.ReadAsStringAsync();
             var body = JsonSerializer.Deserialize<NameDto>(stringBody);
             var name = body!.name;
@@ -73,6 +90,31 @@ namespace PrincessConsole
             else
             {
                 return name;
+            }
+        }
+
+        private async Task AsyncReset()
+        {
+            var postContent = new StringContent("");
+            var response = await _client.PostAsync($"hall/reset", postContent);
+            var stringBody = await response.Content.ReadAsStringAsync();
+            return;
+        }
+
+        private async Task<int> AsyncSelect()
+        {
+            var postContent = new StringContent("");
+            var response = await _client.PostAsync($"aspirants/hall/{_currentAttempt}/select", postContent);
+            var stringBody = await response.Content.ReadAsStringAsync();
+            var body = JsonSerializer.Deserialize<QualityDto>(stringBody);
+            var rank = body!.rank;
+            if(rank == null)
+            {
+                throw new NoAspirantException($"There is no more aspirants");
+            }
+            else
+            {
+                return (int)rank;
             }
         }
     }

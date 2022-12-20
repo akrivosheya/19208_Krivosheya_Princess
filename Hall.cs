@@ -26,6 +26,10 @@ namespace PrincessConsole
             return this[_currentAspirant++];
         }
 
+        public void Select()
+        {
+        }
+
         public IEnumerator<string> GetEnumerator()
         {
             foreach(string aspirantName in _queue)
