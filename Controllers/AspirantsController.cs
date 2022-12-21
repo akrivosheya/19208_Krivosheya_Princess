@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace PrincessConsole
 {
@@ -7,13 +6,11 @@ namespace PrincessConsole
     [Route("aspirants")]
     public class AspirantsController : ControllerBase
     {
-        private readonly ILogger<AspirantsController> _logger;
         private IServiceProvider _provider;
         private ControllerData _data;
 
-        public AspirantsController(ILogger<AspirantsController> logger, IServiceProvider provider, ControllerData data)
+        public AspirantsController(IServiceProvider provider, ControllerData data)
         {
-            _logger = logger;
             _provider = provider;
             _data = data;
         }
