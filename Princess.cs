@@ -48,6 +48,7 @@ namespace PrincessConsole
                 while(hall.HasNext)
                 {
                     string aspirantName = hall.Next();
+                    Console.WriteLine(aspirantName);
                     if(!_running)
                     {
                         _logger.LogInformation(MessageStoppedPrincess);
@@ -63,6 +64,7 @@ namespace PrincessConsole
                         bool badAspirant = false;
                         for(int j = 0; j < i; ++j)
                         {
+                        Console.WriteLine(aspirantName);
                             if(!friend.Compare(aspirantName, _wastedAspirants[j]))
                             {
                                 badAspirant = true;
